@@ -5,11 +5,13 @@ using UnityEngine;
 public class Character : TogaMonoBehaviour
 {
     [SerializeField] protected Animator anim;
+    [SerializeField] protected Transform holder;
 
     protected override void LoadComponents()
     {
         base.LoadComponents();
         this.LoadAnim();
+        this.LoadHolder();
     }
 
     protected virtual void LoadAnim()
@@ -18,17 +20,23 @@ public class Character : TogaMonoBehaviour
         this.anim = transform.GetComponentInChildren<Animator>();
     }
 
+    protected virtual void LoadHolder()
+    {
+        if (this.holder != null) return;
+        this.holder = transform.Find("BrickHolder");
+    }
+
     protected virtual void Move()
     {
         //For override
     }
 
-    protected virtual void TakeBrick()
+    protected virtual void AddBrick()
     {
         //For override
     }
 
-    protected virtual void BuildBrick()
+    protected virtual void RemoveBrick()
     {
         //For override
     }
