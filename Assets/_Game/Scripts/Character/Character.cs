@@ -6,6 +6,12 @@ public class Character : TogaMonoBehaviour
 {
     [SerializeField] protected Animator anim;
     [SerializeField] public Transform Brickholder;
+    protected Vector3 startHolderPos;
+
+    protected virtual void Start()
+    {
+        startHolderPos = Brickholder.localPosition;
+    }
 
     protected override void LoadComponents()
     {
@@ -37,6 +43,11 @@ public class Character : TogaMonoBehaviour
     }
 
     protected virtual void RemoveBrick()
+    {
+        //For override
+    }
+
+    protected virtual void ClearAllBrick()
     {
         //For override
     }

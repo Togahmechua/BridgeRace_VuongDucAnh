@@ -1,19 +1,55 @@
+using System.Collections;
 using UnityEngine;
 
-public class Brick : MonoBehaviour
+public class Brick : TogaMonoBehaviour
 {
-    [SerializeField] private Renderer objectRenderer;
+    // [SerializeField] public Renderer objectRenderer;
+    [SerializeField] protected BoxCollider boxCollider;
+    [SerializeField] public MeshRenderer meshRenderer;
+    public EColor.ColorByEnum eColor;
 
     private void Start()
     {
-        LevelManager.Ins.ActiveColor(objectRenderer);
+        this.BrickColor();
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void LoadComponents()
     {
-        if (other.gameObject.CompareTag(Constants.TAG_PLayer))
-        {
-            gameObject.SetActive(false);
-        }
+        base.LoadComponents();
+        this.LoadBox();
+        this.LoadMeshRenderer();
+    }
+
+    protected virtual void LoadBox()
+    {
+        if (this.boxCollider != null) return;
+        this.boxCollider = GetComponent<BoxCollider>();
+    }
+
+    protected virtual void LoadMeshRenderer()
+    {
+        if (this.meshRenderer != null) return;
+        this.meshRenderer = GetComponent<MeshRenderer>();
+    }
+
+    public void BrickColor()
+    {
+        eColor = LevelManager.Ins.ActiveColor(meshRenderer); // Get and save the color enum
+    }
+
+    public void ActiveFalse()
+    {
+        // gameObject.SetActive(false);
+        meshRenderer.enabled = false;
+        boxCollider.enabled = false;
+        StartCoroutine(Wait2Sec());
+    }
+
+    private IEnumerator Wait2Sec()
+    {
+        yield return new WaitForSeconds(2f);
+        // gameObject.SetActive(true);
+        meshRenderer.enabled = true;
+        boxCollider.enabled = true;
     }
 }
