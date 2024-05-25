@@ -4,21 +4,29 @@ using UnityEngine;
 
 public abstract class Despawn : TogaMonoBehaviour
 {
-    protected virtual void FixedUpdate()
-    {
-        this.Despawning();
-    }
+    // protected virtual void FixedUpdate()
+    // {
+    //     this.Despawning();
+    // }
 
-    protected virtual void Despawning()
-    {
-        // if (!this.CanDespawn()) return;
-        this.DespawnObject();
-    }
+    // protected virtual void Despawning()
+    // {
+    //     // if (!this.CanDespawn()) return;
+    //     this.DespawnObject();
+    // }
 
-    public virtual void DespawnObject()
-    {
-        Destroy(transform.parent.gameObject);
-    }
+    // public virtual void DespawnObject()
+    // {
+    //     Destroy(transform.parent.gameObject);
+    // }
 
-    protected abstract bool CanDespawn();
+    // protected abstract bool CanDespawn();
+
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.gameObject.CompareTag(Constants.TAG_PLayer))
+    //     {
+    //         Player.Ins.
+    //     }
+    // }
 }

@@ -27,8 +27,9 @@ public class Platform : MonoBehaviour
             for (int y = 0; y <10; y++)
             {
                 y++;
-                Brick brick = Instantiate(brickPrefab);
+                Brick brick = Instantiate(brickPrefab,Player.Ins.Brickholder.position,Player.Ins.Brickholder.rotation);
                 brick.transform.position = startPos.position + new Vector3(x,0,-y);
+                // BrickSpawner.Instance.poolObjs.Add(brick.transform);
             }
         }
     }

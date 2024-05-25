@@ -5,8 +5,8 @@ using UnityEngine;
 public class Pool : TogaMonoBehaviour
 {
     [SerializeField] protected List<Transform> prefabs;
-    [SerializeField] protected List<Transform> poolObjs;
-    [SerializeField] protected Transform holder;
+    [SerializeField] public List<Transform> poolObjs;
+    [SerializeField] public Transform holder;
 
     protected override void LoadComponents()
     {
@@ -43,7 +43,7 @@ public class Pool : TogaMonoBehaviour
 
     public virtual Transform Spawn(string prefabName, Vector3 spawnPos, Quaternion rotation)
     {
-        Transform prefab = this.GetPreFarbByName(prefabName);
+        Transform prefab = this.GetPrefabByName(prefabName);
         if (prefab == null)
         {
             Debug.LogWarning("Prefab not found " + prefabName);
@@ -63,7 +63,7 @@ public class Pool : TogaMonoBehaviour
         return newPrefab;
     }
 
-     protected virtual Transform GetObjectFormPool(Transform prefab)
+    protected virtual Transform GetObjectFormPool(Transform prefab)
     {
         foreach(Transform poolObj in this.poolObjs)
         {
@@ -85,7 +85,7 @@ public class Pool : TogaMonoBehaviour
         obj.gameObject.SetActive(false);
     }
 
-    public virtual Transform GetPreFarbByName(string prefabName)
+    public virtual Transform GetPrefabByName(string prefabName)
     {
         foreach (Transform prefab in this.prefabs)
         {

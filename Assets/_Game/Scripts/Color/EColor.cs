@@ -7,7 +7,7 @@ public class EColor
     public enum ColorByEnum
     {
         None = 0,
-        Black = 1,
+        Red = 1,
         Blue = 2,
         Green = 3,
     }

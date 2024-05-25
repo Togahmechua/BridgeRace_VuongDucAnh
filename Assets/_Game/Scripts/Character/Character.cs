@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character : TogaMonoBehaviour
 {
     [SerializeField] protected Animator anim;
-    [SerializeField] protected Transform holder;
+    [SerializeField] public Transform Brickholder;
 
     protected override void LoadComponents()
     {
@@ -22,8 +22,8 @@ public class Character : TogaMonoBehaviour
 
     protected virtual void LoadHolder()
     {
-        if (this.holder != null) return;
-        this.holder = transform.Find("BrickHolder");
+        if (this.Brickholder != null) return;
+        this.Brickholder = transform.Find("Holder");
     }
 
     protected virtual void Move()

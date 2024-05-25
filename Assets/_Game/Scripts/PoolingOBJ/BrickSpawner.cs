@@ -1,20 +1,50 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BrickSpawner : Pool
+public class BrickSpawner : MonoBehaviour
 {
-    private static Pool instance;
-    public static Pool Instance { get => instance;}
-    public static string brick1 = "BrickPrefab";
+    public static BrickSpawner Instance;
+    public List<Transform> poolObjs = new List<Transform>();
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        if (BrickSpawner.instance != null)
+        Instance = this;
+    }
+
+    public Transform GetObjectFromPool(GameObject prefab, Vector3 spawnPos, Quaternion rotation)
+    {
+        if (poolObjs.Count > 0)
         {
-            Debug.LogError("There are 2 Pool exist");
+            Transform obj = poolObjs[0];
+            poolObjs.RemoveAt(0);
+            obj.SetPositionAndRotation(spawnPos, rotation);
+            obj.gameObject.SetActive(true);
+            Debug.Log("A");
+            return obj;
         }
-        BrickSpawner.instance = this;
+        else
+        {
+            Debug.Log("B");
+            return Instantiate(prefab, spawnPos, rotation).transform;
+        }
+    }
+
+    public int GetIndexOfBrickInPool(Transform brick)
+    {
+        return poolObjs.IndexOf(brick);
+    }
+
+    public void RemoveBrickFromPool(int index)
+    {
+        if (index >= 0 && index < poolObjs.Count)
+        {
+            poolObjs.RemoveAt(index);
+        }
+    }
+
+    public void ReturnObjectToPool(Transform obj)
+    {
+        obj.gameObject.SetActive(false);
+        poolObjs.Add(obj);
     }
 }
