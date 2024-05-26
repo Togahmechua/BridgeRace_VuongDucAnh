@@ -14,7 +14,7 @@ public class Player : Character
     [SerializeField] private Transform rayPos;
     [SerializeField] private float raycastDistance;
     [SerializeField] private Renderer objectRenderer;
-
+    private float originalMoveSpeed;
 
     public Color CurrentColor { get; private set; }
     public EColor.ColorByEnum CurrentColorEnum { get; private set; }
@@ -23,11 +23,18 @@ public class Player : Character
     {
         base.Start();
         this.ChangeColors();
+        originalMoveSpeed = moveSpeed;
+        Test();
     }
 
     private void FixedUpdate()
     {
         this.Move();
+    }
+
+    private void Test()
+    {
+        LevelManager.Ins.SpawnObjectsWithDifferentColors(CurrentColorEnum);
     }
 
     private void ChangeColors()
@@ -39,12 +46,15 @@ public class Player : Character
     protected override void Move()
     {
         base.Move();
-        if (joyStick.Vertical > 0)
+
+        // Check joystick input and adjust speed if necessary
+        if (joyStick.Vertical != 0)
         {
             RaycastCheck();
         }
         else
         {
+            moveSpeed = originalMoveSpeed;
             rb.velocity = new Vector3(joyStick.Horizontal * moveSpeed, rb.velocity.y, joyStick.Vertical * moveSpeed);
         }
 
@@ -82,17 +92,25 @@ public class Player : Character
             Stair stair = Cache.GetStair(hit.collider);
             if (stair != null)
             {
-                if (stackBricks.Count <= 0) return;
-                if  (stair.eColor == EColor.ColorByEnum.None || stair.eColor != CurrentColorEnum)
+                if (stackBricks.Count <= 0 && joyStick.Vertical > 0)
                 {
-                    if (stair.stairColorChanged == false)
+                    moveSpeed = 0;
+                }
+                else if (joyStick.Vertical < 0)
+                {
+                    moveSpeed = originalMoveSpeed;
+                }
+                
+                if (stair.eColor == EColor.ColorByEnum.None || stair.eColor != CurrentColorEnum)
+                {
+                    if (!stair.stairColorChanged)
                     {
                         Debug.Log("A");
                         stair.meshRenderer.material.color = CurrentColor;
                         RemoveBrick();
                         stair.stairColorChanged = true;
                     }
-                } 
+                }
             }
 
             Vector3 hitNormal = hit.normal;
