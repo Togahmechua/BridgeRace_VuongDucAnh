@@ -1,5 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -7,58 +8,97 @@ public class LevelManager : MonoBehaviour
     private static LevelManager ins;
     public static LevelManager Ins => ins;
     public ColorData colorData;
-    [SerializeField] private BotCtrl objectPrefab; // Prefab for the objects to be spawned
+    public ColorByEnum colorByEnum;
+    [SerializeField] private Platform[] Currentplatform;
+    [SerializeField] private BotCtrl botPrefab; // Prefab for the objects to be spawned
     [SerializeField] private Transform[] spawnPoints; // Spawn points for the objects
+    [SerializeField] private Player player;
 
     private void Awake()
     {
         LevelManager.ins = this;
+        // Currentplatform[0].SpawnBrick();
+        Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
+        ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Count()+1);
+       
+        foreach (ColorByEnum color in randomColors)
+        {
+            Debug.Log(color);
+        }
+
+        Currentplatform[0].SpawnBrick(randomColors);
+
+        player.ChangeColor(randomColors[0]);
         
-    }
-
-    public EColor.ColorByEnum ActiveColor(Renderer objectRenderer)
-    {
-        EColor.ColorByEnum randomColorEnum = GetRandomEnumValue<EColor.ColorByEnum>();
-        Color newColor = colorData.GetColorByEnum((int)randomColorEnum);
-        if (objectRenderer != null)
+        for (int i = 0; i < shuffledSpawnPoints.Length; i++)
         {
-            objectRenderer.material.color = newColor;
-        }
-        return randomColorEnum;
-    }
-    
-    private T GetRandomEnumValue<T>()
-    {
-        System.Array values = System.Enum.GetValues(typeof(T));
-        int randomIndex = Random.Range(1, values.Length);
-        return (T)values.GetValue(randomIndex);
-    }
-
-    public void SetColor(Renderer objectRenderer, int x)
-    {
-        Color newColor = colorData.GetColorByEnum(x);
-        if (objectRenderer != null)
-        {
-            objectRenderer.material.color = newColor;
+            BotCtrl newObject = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
+            newObject.ChangeColor(randomColors[i + 1]); // Start from the second color
         }
     }
 
-    public void SpawnObjectsWithDifferentColors(EColor.ColorByEnum playerColor)
+    private void Start()
     {
-        HashSet<EColor.ColorByEnum> usedColors = new HashSet<EColor.ColorByEnum>();
-        usedColors.Add(playerColor);
+        // Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
+        // ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Count()+1);
+       
+        // foreach (ColorByEnum color in randomColors)
+        // {
+        //     Debug.Log(color);
+        // }
 
-        for (int i = 0; i < 2; i++)
+        // player.ChangeColor(randomColors[0]);
+        
+        // for (int i = 0; i < shuffledSpawnPoints.Length - 1; i++)
+        // {
+        //     BotCtrl newObject = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
+        //     newObject.ChangeColor(randomColors[i + 1]); // Start from the second color
+        // }
+        // ChangeBrickColor();
+    }
+
+
+    public ColorByEnum[] RandomEnumValues(int count)
+    {
+        Array enumValues = Enum.GetValues(typeof(ColorByEnum));
+        List<ColorByEnum> enumList = new List<ColorByEnum>();
+
+        
+        foreach (ColorByEnum value in enumValues)
         {
-            EColor.ColorByEnum newColorEnum = GetRandomEnumValue<EColor.ColorByEnum>();
-            while (usedColors.Contains(newColorEnum))
+            if (value != ColorByEnum.None)
             {
-                newColorEnum = GetRandomEnumValue<EColor.ColorByEnum>();
+                enumList.Add(value);
             }
-            usedColors.Add(newColorEnum);
-
-            BotCtrl newObject = Instantiate(objectPrefab, spawnPoints[i].position, Quaternion.identity);
-            SetColor(newObject.objectRenderer, (int)newColorEnum);
         }
+
+        
+        if (count > enumList.Count)
+        {
+            Debug.LogError("Not enough enum values to select.");
+            return null;
+        }
+
+        for (int i = 0; i < enumList.Count; i++)
+        {
+            ColorByEnum temp = enumList[i];
+            int randomIndex = UnityEngine.Random.Range(i, enumList.Count);
+            enumList[i] = enumList[randomIndex];
+            enumList[randomIndex] = temp;
+        }
+        return enumList.GetRange(0, count).ToArray();
     }
+
+    public Transform[] ShuffleTransforms(Transform[] transforms)
+    {
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            Transform temp = transforms[i];
+            int randomIndex = UnityEngine.Random.Range(i, transforms.Length);
+            transforms[i] = transforms[randomIndex];
+            transforms[randomIndex] = temp;
+        }
+        return transforms;
+    }
+
 }

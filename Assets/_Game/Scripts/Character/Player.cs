@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -9,22 +8,21 @@ public class Player : Character
     [SerializeField] private Rigidbody rb;
     [SerializeField] private FixedJoystick joyStick;
     [SerializeField] private float moveSpeed;
-    [SerializeField] private Brick brickPrefab;
-    private Stack<GameObject> stackBricks = new Stack<GameObject>();
+    // [SerializeField] private Brick brickPrefab;
+    // private Stack<GameObject> stackBricks = new Stack<GameObject>();
     [SerializeField] private Transform rayPos;
     [SerializeField] private float raycastDistance;
-    [SerializeField] private Renderer objectRenderer;
+    [SerializeField] private Platform platform2;
     private float originalMoveSpeed;
 
-    public Color CurrentColor { get; private set; }
-    public EColor.ColorByEnum CurrentColorEnum { get; private set; }
+
+    
 
     protected override void Start()
     {
         base.Start();
-        this.ChangeColors();
+        // this.ChangeColors();
         originalMoveSpeed = moveSpeed;
-        Test();
     }
 
     private void FixedUpdate()
@@ -32,22 +30,22 @@ public class Player : Character
         this.Move();
     }
 
-    private void Test()
-    {
-        LevelManager.Ins.SpawnObjectsWithDifferentColors(CurrentColorEnum);
-    }
+    // private void Test()
+    // {
+    //     LevelManager.Ins.SpawnObjectsWithDifferentColors(CurrentColorEnum);
+    // }
 
-    private void ChangeColors()
+    public override void ChangeColor(ColorByEnum  color)
     {
-        CurrentColorEnum = LevelManager.Ins.ActiveColor(objectRenderer); // Save the current color enum
-        CurrentColor = objectRenderer.material.color; // Save the current color
+        base.ChangeColor(color);
+        // CurrentColorEnum = LevelManager.Ins.ActiveColor(objectRenderer); // Save the current color enum
+        // CurrentColor = objectRenderer.material.color; // Save the current color
     }
 
     protected override void Move()
     {
         base.Move();
 
-        // Check joystick input and adjust speed if necessary
         if (joyStick.Vertical != 0)
         {
             RaycastCheck();
@@ -71,14 +69,12 @@ public class Player : Character
 
     private void AdjustMovementOnSlope(Vector3 slopeNormal)
     {
-        // Adjust movement based on the slope angle
         Vector3 moveDirection = new Vector3(joyStick.Horizontal, 0, joyStick.Vertical).normalized;
         Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeNormal);
         Vector3 adjustedMoveDirection = slopeRotation * moveDirection;
 
         rb.velocity = new Vector3(adjustedMoveDirection.x * moveSpeed, rb.velocity.y, adjustedMoveDirection.z * moveSpeed);
 
-        // Adjust the character's rotation to align with the slope normal
         Vector3 forwardDirection = Vector3.Cross(transform.right, slopeNormal).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(forwardDirection, slopeNormal);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
@@ -101,16 +97,19 @@ public class Player : Character
                     moveSpeed = originalMoveSpeed;
                 }
                 
-                if (stair.eColor == EColor.ColorByEnum.None || stair.eColor != CurrentColorEnum)
+                if (stackBricks.Count != 0)
                 {
-                    if (!stair.stairColorChanged)
+                    if (stair.stairEnum == ColorByEnum.None || stair.stairEnum != CurrentColorEnum)
                     {
-                        Debug.Log("A");
-                        stair.meshRenderer.material.color = CurrentColor;
-                        RemoveBrick();
-                        stair.stairColorChanged = true;
+                        if (!stair.stairColorChanged)
+                        {
+                            stair.meshRenderer.material.color = objectRenderer.material.color;
+                            RemoveBrick();
+                            stair.stairColorChanged = true;
+                        }
                     }
                 }
+                
             }
 
             Vector3 hitNormal = hit.normal;
@@ -118,48 +117,57 @@ public class Player : Character
         }
     }
 
-    protected override void AddBrick()
+    protected override void AddBrick(Color CurrentColor)
     {
-        base.AddBrick();
-        Brick newBrick = Instantiate(brickPrefab, Brickholder.position, Brickholder.rotation);
-        newBrick.transform.SetParent(transform);
-        Brickholder.transform.localPosition += new Vector3(0, 0.2f, 0);
+        base.AddBrick(CurrentColor);
+        // Brick newBrick = Instantiate(brickPrefab, Brickholder.position, Brickholder.rotation);
+        // newBrick.transform.SetParent(transform);
+        // Brickholder.transform.localPosition += new Vector3(0, 0.2f, 0);
 
-        stackBricks.Push(newBrick.gameObject);
-        newBrick.enabled = false;
-        newBrick.meshRenderer.material.color = CurrentColor;
+        // stackBricks.Push(newBrick.gameObject);
+        // newBrick.enabled = false;
+        // newBrick.meshRenderer.material.color = CurrentColor;
     }
 
     protected override void RemoveBrick()
     {
         base.RemoveBrick();
-        if (stackBricks.Count <= 0) return;
+        // if (stackBricks.Count <= 0) return;
 
-        Destroy(stackBricks.Pop());
-        Brickholder.transform.localPosition -= new Vector3(0, 0.2f, 0);
+        // Destroy(stackBricks.Pop());
+        // Brickholder.transform.localPosition -= new Vector3(0, 0.2f, 0);
     }
 
     protected override void ClearAllBrick()
     {
         base.ClearAllBrick();
-        if (stackBricks.Count == 0) return;
+        // if (stackBricks.Count == 0) return;
 
-        while (stackBricks.Count > 0)
-        {
-            Destroy(stackBricks.Pop());
-            Brickholder.localPosition = startHolderPos;
-        }
+        // while (stackBricks.Count > 0)
+        // {
+        //     Destroy(stackBricks.Pop());
+        //     Brickholder.localPosition = startHolderPos;
+        // }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Brick otherBrick = Cache.GetBrick(other);
-        if (otherBrick != null && otherBrick.eColor == CurrentColorEnum) // Check color before collecting
+        if (otherBrick != null && otherBrick.BrickColorEnum == CurrentColorEnum)
         {
-            this.AddBrick();
+            this.AddBrick(objectRenderer.material.color);
             otherBrick.ActiveFalse();
         }
+
+        Door door = Cache.GetDoor(other);
+        if (door != null && joyStick.Vertical > 0)
+        {
+            door.ActiveDoor();
+            this.ClearAllBrick();
+            // platform2.SpawnBrick2(CurrentColorEnum,objectRenderer.material.color);
+        }
     }
+
 
     protected void OnDrawGizmos()
     {

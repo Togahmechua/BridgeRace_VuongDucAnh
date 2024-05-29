@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +5,24 @@ public class Character : TogaMonoBehaviour
 {
     [SerializeField] protected Animator anim;
     [SerializeField] public Transform Brickholder;
+    [SerializeField] private Brick brickPrefab;
+    [SerializeField] public Renderer objectRenderer;
+    public Stack<GameObject> stackBricks = new Stack<GameObject>();
     protected Vector3 startHolderPos;
+    // protected Color CurrentColor { get; set; }
+
+    [SerializeField] ColorData colorData;
+    public ColorByEnum CurrentColorEnum { get; private set; }
 
     protected virtual void Start()
     {
         startHolderPos = Brickholder.localPosition;
+    }
+
+    public virtual void ChangeColor(ColorByEnum  color)
+    {
+        CurrentColorEnum = color;
+        objectRenderer.material = colorData.GetMaterial(color);
     }
 
     protected override void LoadComponents()
@@ -37,23 +49,32 @@ public class Character : TogaMonoBehaviour
         //For override
     }
 
-    protected virtual void AddBrick()
+    protected virtual void AddBrick(Color CurrentColor)
     {
-        //For override
+        Brick newBrick = Instantiate(brickPrefab, Brickholder.position, Brickholder.rotation);
+        newBrick.transform.SetParent(transform);
+        Brickholder.transform.localPosition += new Vector3(0, 0.2f, 0);
+        stackBricks.Push(newBrick.gameObject);
+        newBrick.enabled = false;
+        newBrick.meshRenderer.material.color = CurrentColor;
     }
 
     protected virtual void RemoveBrick()
     {
-        //For override
+        if (stackBricks.Count <= 0) return;
+
+        Destroy(stackBricks.Pop());
+        Brickholder.transform.localPosition -= new Vector3(0, 0.2f, 0);
     }
 
     protected virtual void ClearAllBrick()
     {
-        //For override
-    }
+        if (stackBricks.Count == 0) return;
 
-    protected virtual void Animation()
-    {
-        //For override
+        while (stackBricks.Count > 0)
+        {
+            Destroy(stackBricks.Pop());
+            Brickholder.localPosition = startHolderPos;
+        }
     }
 }

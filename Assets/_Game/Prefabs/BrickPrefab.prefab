@@ -120,4 +120,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxCollider: {fileID: 290254029254924779}
   meshRenderer: {fileID: 4791728097606426051}
-  eColor: 0
+  colorData: {fileID: 11400000, guid: 554ada1bf2b984045aebe76edb1b939b, type: 2}

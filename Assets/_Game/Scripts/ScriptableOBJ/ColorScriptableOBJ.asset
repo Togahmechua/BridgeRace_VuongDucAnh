@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f3fb522fab880e4883be57dba3bedb0, type: 3}
   m_Name: ColorScriptableOBJ
   m_EditorClassIdentifier: 
-  colors:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 1, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0.23351526, b: 1, a: 0}
-  - {r: 0.10979819, g: 1, b: 0, a: 0}
+  materials:
+  - {fileID: 2100000, guid: 7a5ffc4ca14e6804e9950a5c889c3859, type: 2}
+  - {fileID: 2100000, guid: 8dfa46f7cd9fe9f458f0a46459b38ddf, type: 2}
+  - {fileID: 2100000, guid: 02f5dbd365c813e4f89f5f2bb7993862, type: 2}
+  - {fileID: 2100000, guid: 26c76dbbd5b0fbf4b9a80eca5effadcd, type: 2}
+  - {fileID: 2100000, guid: 448d9ea18ea5f714198febb03e06996b, type: 2}
+  - {fileID: 2100000, guid: d38369489faecdb4fa842eda19c0b946, type: 2}

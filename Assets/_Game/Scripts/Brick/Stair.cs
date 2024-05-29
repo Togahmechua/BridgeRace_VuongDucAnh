@@ -5,13 +5,13 @@ using UnityEngine;
 public class Stair : TogaMonoBehaviour
 {
     [SerializeField] public MeshRenderer meshRenderer;
-    public EColor.ColorByEnum eColor;
+    public ColorByEnum stairEnum;
     public bool stairColorChanged = false;
 
     
     protected void Start()
     {
-        eColor = EColor.ColorByEnum.None;
+        stairEnum = ColorByEnum.None;
     }
 
     void Update()
@@ -34,7 +34,7 @@ public class Stair : TogaMonoBehaviour
 
     private void Check()
     {
-        if (eColor != EColor.ColorByEnum.None)
+        if (stairEnum != ColorByEnum.None)
         {
             stairColorChanged = true;
         }
