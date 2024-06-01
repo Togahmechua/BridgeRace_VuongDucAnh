@@ -9,15 +9,16 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Ins => ins;
     public ColorData colorData;
     public ColorByEnum colorByEnum;
-    [SerializeField] private Platform[] Currentplatform;
+    [SerializeField] public Platform[] Currentplatform;
     [SerializeField] private BotCtrl botPrefab; // Prefab for the objects to be spawned
     [SerializeField] private Transform[] spawnPoints; // Spawn points for the objects
     [SerializeField] private Player player;
+    private int currentPlayerPlatformIndex = 0;
 
     private void Awake()
     {
         LevelManager.ins = this;
-        // Currentplatform[0].SpawnBrick();
+        
         Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
         ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Count()+1);
        
@@ -33,6 +34,7 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < shuffledSpawnPoints.Length; i++)
         {
             BotCtrl newObject = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
+            // BotCtrl newObject = SimplePool.Spawn<BotCtrl>(PoolType.Bot,shuffledSpawnPoints[i].position, Quaternion.identity);
             newObject.ChangeColor(randomColors[i + 1]); // Start from the second color
         }
     }
@@ -99,6 +101,17 @@ public class LevelManager : MonoBehaviour
             transforms[randomIndex] = temp;
         }
         return transforms;
+    }
+
+    public Platform GetNextPlatform()
+    {
+        currentPlayerPlatformIndex++;
+        if (currentPlayerPlatformIndex >= Currentplatform.Length)
+        {
+            currentPlayerPlatformIndex = 0; // Wrap around if at the end of the array
+        }
+
+        return Currentplatform[currentPlayerPlatformIndex];
     }
 
 }

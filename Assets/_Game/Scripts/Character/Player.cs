@@ -12,8 +12,9 @@ public class Player : Character
     // private Stack<GameObject> stackBricks = new Stack<GameObject>();
     [SerializeField] private Transform rayPos;
     [SerializeField] private float raycastDistance;
-    [SerializeField] private Platform platform2;
+    [SerializeField] private Platform playerPlatform;
     private float originalMoveSpeed;
+    
 
 
     
@@ -21,6 +22,7 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
+        playerPlatform = LevelManager.Ins.Currentplatform[0];
         // this.ChangeColors();
         originalMoveSpeed = moveSpeed;
     }
@@ -99,14 +101,11 @@ public class Player : Character
                 
                 if (stackBricks.Count != 0)
                 {
-                    if (stair.stairEnum == ColorByEnum.None || stair.stairEnum != CurrentColorEnum)
-                    {
-                        if (!stair.stairColorChanged)
-                        {
-                            stair.meshRenderer.material.color = objectRenderer.material.color;
-                            RemoveBrick();
-                            stair.stairColorChanged = true;
-                        }
+                    if (stair.stairEnum == ColorByEnum.None || stair.stairEnum != this.CurrentColorEnum)
+                    { 
+                        stair.ChangeColor(CurrentColorEnum);
+                        // stair.meshRenderer.material.color = objectRenderer.material.color;
+                        RemoveBrick();  
                     }
                 }
                 
@@ -162,11 +161,27 @@ public class Player : Character
         Door door = Cache.GetDoor(other);
         if (door != null && joyStick.Vertical > 0)
         {
-            door.ActiveDoor();
+            Debug.Log(other.gameObject.name);
             this.ClearAllBrick();
-            // platform2.SpawnBrick2(CurrentColorEnum,objectRenderer.material.color);
+            playerPlatform = LevelManager.Ins.GetNextPlatform();
+            this.transform.position += new Vector3(0,0,1f);
         }
     }
+
+//     private void OnCollisionExit(Collision other)
+//     {
+//         // Debug.Log(other.gameObject.name);
+        
+//         if (other.collider.CompareTag("Door") && joyStick.Vertical > 0)
+//         {
+//                     Door door = other.collider.GetComponent<Door>();
+//             Debug.Log(other.gameObject.name);
+//             playerPlatform = LevelManager.Ins.GetNextPlatform();
+//             this.ClearAllBrick();
+//             door.Compare(playerPlatform);
+//             this.transform.position += new Vector3(0,0,0.5f);
+//         }
+//     }
 
 
     protected void OnDrawGizmos()

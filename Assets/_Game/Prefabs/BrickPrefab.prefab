@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0064833a91faf9c4fb84fcb7f06bc398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolType: 1
   boxCollider: {fileID: 290254029254924779}
   meshRenderer: {fileID: 4791728097606426051}
   colorData: {fileID: 11400000, guid: 554ada1bf2b984045aebe76edb1b939b, type: 2}

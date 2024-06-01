@@ -100,14 +100,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab94b23980e6f742aea484f69a89f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolType: 2
   anim: {fileID: 6377879982446946959}
   Brickholder: {fileID: 984924064920249415}
   brickPrefab: {fileID: 5406528586920750460, guid: 4ff0102127727cd41871ccd331051296, type: 3}
   objectRenderer: {fileID: 8239969497601282729}
   colorData: {fileID: 11400000, guid: 554ada1bf2b984045aebe76edb1b939b, type: 2}
   agent: {fileID: 3809503096727840237}
-  finishPos: {fileID: 0}
+  finishPos: {fileID: 2683709971993923836}
   botColorEnum: 0
+  rayPos: {fileID: 0}
+  currentPlatform: {fileID: 0}
+  raycastDistance: 5
 --- !u!195 &3809503096727840237
 NavMeshAgent:
   m_ObjectHideFlags: 0

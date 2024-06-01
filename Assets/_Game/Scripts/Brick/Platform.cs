@@ -8,6 +8,7 @@ public class Platform : MonoBehaviour
     [SerializeField] private Brick brickPrefab;
     [SerializeField] public List<Brick> brickList = new List<Brick>();
 
+
     private void Start()
     {
         brickList.AddRange(FindObjectsOfType<Brick>());
@@ -31,30 +32,28 @@ public class Platform : MonoBehaviour
             {
                 y++;
                 Brick brick = Instantiate(brickPrefab);
+                // Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick);
+                // Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick, transform.position, Quaternion.identity);
                 brick.ChangeColor(colors[index]);
                 brick.transform.position = startPos.position + new Vector3(x * 1.1f, 0, -y * 1.1f); // Adjust spacing as needed
-                brick.BrickColor();  
+                // brick.BrickColor();  
                 brickList.Add(brick);
-
+                brick.transform.SetParent(transform);
                 index = (index + 1) % colors.Length;
             }
         }
     }
 
-    // public List<Brick> GetBricksByColor(ColorByEnum color)
-    // {
-    //     return brickList.FindAll(brick => brick.BrickColorEnum == color);
-    // }
-
-    public void SpawnBrick2(ColorByEnum playerColor,Color playercolor)
+    public List<Brick> GetBricksByColor(ColorByEnum colorEnum)
     {
-        
-        Debug.Log("SpawnBrick2");
+        return brickList.FindAll(brick => brick.BrickColorEnum == colorEnum);
+    }
 
-        
+    public void SpawnBrick2(Character character,ColorByEnum CurrentColorEnum)
+    {
         foreach (Brick brick in brickList)
         {
-            if (brick.BrickColorEnum == playerColor)
+            if (brick.BrickColorEnum == character.CurrentColorEnum)
             {
                 brick.gameObject.SetActive(true);
                 // brick.SetColor(playerColor,playercolor);

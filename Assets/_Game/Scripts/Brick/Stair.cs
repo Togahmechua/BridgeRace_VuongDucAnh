@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Stair : TogaMonoBehaviour
 {
-    [SerializeField] public MeshRenderer meshRenderer;
+    [SerializeField] public Renderer meshRenderer;
+    [SerializeField] ColorData colorData;
     public ColorByEnum stairEnum;
-    public bool stairColorChanged = false;
+    // public bool stairColorChanged = false;
 
     
     protected void Start()
@@ -14,10 +15,13 @@ public class Stair : TogaMonoBehaviour
         stairEnum = ColorByEnum.None;
     }
 
-    void Update()
+    public virtual void ChangeColor(ColorByEnum  color)
     {
-        Check();
+        
+        stairEnum = color;
+        meshRenderer.material = colorData.GetMaterial(color);
     }
+
 
     protected override void LoadComponents()
     {
@@ -31,17 +35,4 @@ public class Stair : TogaMonoBehaviour
         if (this.meshRenderer != null) return;
         this.meshRenderer = GetComponent<MeshRenderer>();
     }
-
-    private void Check()
-    {
-        if (stairEnum != ColorByEnum.None)
-        {
-            stairColorChanged = true;
-        }
-    }
-
-    // public void StairColor(Renderer other)
-    // {
-    //     meshRenderer.material.color = other.material.color;
-    // }
 }

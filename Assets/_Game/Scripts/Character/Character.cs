@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character : TogaMonoBehaviour
+public class Character : GameUnit
 {
     [SerializeField] protected Animator anim;
     [SerializeField] public Transform Brickholder;
@@ -25,12 +25,12 @@ public class Character : TogaMonoBehaviour
         objectRenderer.material = colorData.GetMaterial(color);
     }
 
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        this.LoadAnim();
-        this.LoadHolder();
-    }
+    // protected override void LoadComponents()
+    // {
+    //     base.LoadComponents();
+    //     this.LoadAnim();
+    //     this.LoadHolder();
+    // }
 
     protected virtual void LoadAnim()
     {
@@ -51,7 +51,7 @@ public class Character : TogaMonoBehaviour
 
     protected virtual void AddBrick(Color CurrentColor)
     {
-        Brick newBrick = Instantiate(brickPrefab, Brickholder.position, Brickholder.rotation);
+        Brick newBrick = SimplePool.Spawn<Brick>(PoolType.Brick, Brickholder.position, Brickholder.rotation);
         newBrick.transform.SetParent(transform);
         Brickholder.transform.localPosition += new Vector3(0, 0.2f, 0);
         stackBricks.Push(newBrick.gameObject);

@@ -2,31 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : TogaMonoBehaviour
+public class Door : MonoBehaviour
 {
     
     [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private Platform platformDoor;
 
-    protected override void LoadComponents()
-    {
-        base.LoadComponents();
-        this.LoadBoxCollider();
-    }
+    // public void ActiveDoor()
+    // {
+    //     boxCollider.isTrigger = true;
+    //     StartCoroutine(Wait());
+    // }
 
-    protected virtual void LoadBoxCollider()
-    {
-        if (this.boxCollider != null) return;
-        this.boxCollider = GetComponent<BoxCollider>();
-    }
-    public void ActiveDoor()
-    {
-        boxCollider.isTrigger = true;
-        StartCoroutine(Wait());
-    }
+    // private IEnumerator Wait()
+    // {
+    //     yield return new WaitForSeconds(0.2f);
+    //     boxCollider.isTrigger = false;
+    // }
 
-    private IEnumerator Wait()
+    public void Compare(Platform otherPlatform)
     {
-        yield return new WaitForSeconds(0.2f);
-        boxCollider.isTrigger = false;
+        if (platformDoor != otherPlatform)
+        {
+            boxCollider.isTrigger = false;
+            Debug.Log("a");
+        }
+        else
+        {
+            boxCollider.isTrigger = true;
+            Debug.Log("b");
+        }
     }
 }
