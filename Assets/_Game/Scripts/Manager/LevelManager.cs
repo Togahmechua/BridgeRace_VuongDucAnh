@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Transform[] spawnPoints; // Spawn points for the objects
     [SerializeField] private Player player;
 
-    public int currentPlatformIndex = 0; // Make currentPlatformIndex global
+    // public int currentPlatformIndex = 0; // Make currentPlatformIndex global
 
     private void Awake()
     {
@@ -75,14 +75,14 @@ public class LevelManager : MonoBehaviour
         return transforms;
     }
 
-    public Platform GetNextPlatform(ref int currentIndex)
-    {
-        currentIndex++;
-        if (currentIndex >= Currentplatform.Length)
-        {
-            currentIndex = 0; // Wrap around if at the end of the array
-        }
+    // public Platform GetNextPlatform(ref int currentIndex)
+    // {
+    //     currentIndex++;
+    //     if (currentIndex >= Currentplatform.Length)
+    //     {
+    //         currentIndex = 0; // Wrap around if at the end of the array
+    //     }
 
-        return Currentplatform[currentIndex];
-    }
+    //     return Currentplatform[currentIndex];
+    // }
 }

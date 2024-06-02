@@ -51,4 +51,17 @@ public class Cache
 
         return doors[collider];
     }
+
+
+    private static Dictionary<Collider, WinPlatform> winPos = new Dictionary<Collider, WinPlatform>();
+
+    public static WinPlatform GetWinPlatform(Collider collider)
+    {
+        if (!winPos.ContainsKey(collider))
+        {
+            winPos.Add(collider, collider.GetComponent<WinPlatform>());
+        }
+
+        return winPos[collider];
+    }
 }

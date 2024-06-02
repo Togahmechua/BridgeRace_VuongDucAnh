@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class IdleState : IState<BotCtrl>
 {
-    public void OnEnter(BotCtrl t)
+    public void OnEnter(BotCtrl bot)
     {
+        bot.ChangeAnim("Idle",true);
     }
 
-    public void OnExecute(BotCtrl t)
+    public void OnExecute(BotCtrl bot)
     {
         
     }
 
-    public void OnExit(BotCtrl t)
+    public void OnExit(BotCtrl bot)
     {
 
     }

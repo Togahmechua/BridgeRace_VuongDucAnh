@@ -14,11 +14,12 @@ public class BotCtrl : Character
     [SerializeField] private float raycastDistance;
     private float originalMoveSpeed;
     private int currentPlatformIndex = 0;
+    [SerializeField] private bool isWinning = false;
 
     protected override void Start()
     {
         base.Start();
-
+        
         if (LevelManager.Ins.Currentplatform == null || LevelManager.Ins.Currentplatform.Length == 0)
         {
             Debug.LogError("Platform list is not assigned or is empty.");
@@ -39,18 +40,18 @@ public class BotCtrl : Character
             Debug.LogError("Game object with the name 'FinishPos' not found.");
         }
         botColorEnum = CurrentColorEnum;
-        // bricksByColor = BotPlatform.GetBricksByColor(botColorEnum);
-
-        // MoveToNextBrick();
     }
 
     private void Update()
     {
-        RaycastCheck();
-        if (agent.remainingDistance < 0.5f && agent.destination != finishPos.position)
-        {
-            MoveToNextBrick();
-        }
+        // RaycastCheck();
+        // if (agent.remainingDistance < 0.5f && agent.destination != finishPos.position)
+        // {
+        //     if (isWinning == false)
+        //     {
+        //         MoveToNextBrick();
+        //     }
+        // }
     }
 
     private Brick FindNearestBrick()
@@ -82,26 +83,25 @@ public class BotCtrl : Character
             Brick nearestBrick = FindNearestBrick();
             if (nearestBrick != null)
             {
-                // bricksByColor.Remove(nearestBrick); // Xóa viên gạch khỏi danh sách nếu cần thiết
                 MoveToBrickWithSameColor(nearestBrick.transform);
             }
             else
             {
                 agent.SetDestination(transform.position);
-                anim.SetBool("IsRunning", false);
+                ChangeAnim("IsRunning",false);
             }
         }
         else
         {
             agent.SetDestination(finishPos.position);
-            anim.SetBool("IsRunning", true);
+            ChangeAnim("IsRunning",true);
         }
     }
 
     protected void MoveToBrickWithSameColor(Transform pos)
     {
         agent.SetDestination(pos.position);
-        anim.SetBool("IsRunning", true);
+        ChangeAnim("IsRunning",true);
     }
 
     private void RaycastCheck()
@@ -134,7 +134,7 @@ public class BotCtrl : Character
         return Random.Range(5, 10);
     }
 
-     private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         Brick otherBrick = Cache.GetBrick(other);
         if (otherBrick != null && otherBrick.BrickColorEnum == botColorEnum)
@@ -153,41 +153,22 @@ public class BotCtrl : Character
         {
             Debug.Log(other.gameObject.name);
             this.ClearAllBrick();
-            LevelManager.Ins.currentPlatformIndex++;
-            if (LevelManager.Ins.currentPlatformIndex >= LevelManager.Ins.Currentplatform.Length)
-            {
-                LevelManager.Ins.currentPlatformIndex = 0;
-            }
-            BotPlatform = LevelManager.Ins.Currentplatform[LevelManager.Ins.currentPlatformIndex];
+            // BotPlatform = LevelManager.Ins.Currentplatform[currentPlatformIndex++];
+            BotPlatform = door.platformDoor;
             this.transform.position += new Vector3(0, 0, 1f);
             BotPlatform.SpawnBrick2(this, 5);
             bricksByColor = BotPlatform.GetBricksByColor(botColorEnum);
             MoveToNextBrick();
         }
+
+        WinPlatform winPlatform = Cache.GetWinPlatform(other);
+        if (winPlatform != null && agent.velocity.z > 0)
+        {
+            anim.SetTrigger("IsWinning");
+            isWinning = true;
+            Debug.Log(this .gameObject.name + "win");
+        }
     }
-
-    // private void ClearBricksByColor()
-    // {
-    //     List<Brick> bricksToRemove = new List<Brick>();
-
-    //     // Thêm các viên gạch có màu giống bot vào danh sách tạm thời
-    //     foreach (var brick in BotPlatform.brickList)
-    //     {
-    //         if (brick.BrickColorEnum == botColorEnum)
-    //         {
-    //             bricksToRemove.Add(brick);
-    //         }
-    //     }
-
-    //     // Xóa các viên gạch khỏi danh sách chính
-    //     foreach (var brick in bricksToRemove)
-    //     {
-    //         BotPlatform.brickList.Remove(brick);
-    //         brick.gameObject.SetActive(false); // Vô hiệu hóa các đối tượng gạch
-    //     }
-
-    //     bricksByColor.Clear();
-    // }
 
     protected void OnDrawGizmos()
     {

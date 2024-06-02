@@ -3,16 +3,18 @@ using UnityEngine;
 
 public class Character : GameUnit
 {
+    public Stack<GameObject> stackBricks = new Stack<GameObject>();
+    public ColorByEnum CurrentColorEnum { get; private set; }
+
     [SerializeField] protected Animator anim;
     [SerializeField] public Transform Brickholder;
     [SerializeField] private Brick brickPrefab;
     [SerializeField] public Renderer objectRenderer;
-    public Stack<GameObject> stackBricks = new Stack<GameObject>();
-    protected Vector3 startHolderPos;
-    // protected Color CurrentColor { get; set; }
-
     [SerializeField] ColorData colorData;
-    public ColorByEnum CurrentColorEnum { get; private set; }
+
+    protected Vector3 startHolderPos;
+    protected string currentAnimName;
+
 
     protected virtual void Start()
     {
@@ -25,28 +27,14 @@ public class Character : GameUnit
         objectRenderer.material = colorData.GetMaterial(color);
     }
 
-    // protected override void LoadComponents()
-    // {
-    //     base.LoadComponents();
-    //     this.LoadAnim();
-    //     this.LoadHolder();
-    // }
-
-    protected virtual void LoadAnim()
-    {
-        if (this.anim != null) return;
-        this.anim = transform.GetComponentInChildren<Animator>();
-    }
-
-    protected virtual void LoadHolder()
-    {
-        if (this.Brickholder != null) return;
-        this.Brickholder = transform.Find("Holder");
-    }
-
     protected virtual void Move()
     {
         //For override
+    }
+
+    public virtual void ChangeAnim(string nameAnim, bool isActive)
+    {
+        anim.SetBool(nameAnim,isActive);
     }
 
     protected virtual void AddBrick(Color CurrentColor)

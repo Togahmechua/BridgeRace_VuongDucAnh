@@ -15,9 +15,11 @@ public class Player : Character
     [SerializeField] private Platform playerPlatform;
     private float originalMoveSpeed;
     private int currentPlatformIndex = 0;
+    [SerializeField] private bool isWinning = false;
 
 
-    
+
+
 
     protected override void Start()
     {
@@ -32,22 +34,15 @@ public class Player : Character
         this.Move();
     }
 
-    // private void Test()
-    // {
-    //     LevelManager.Ins.SpawnObjectsWithDifferentColors(CurrentColorEnum);
-    // }
-
-    public override void ChangeColor(ColorByEnum  color)
+    public override void ChangeColor(ColorByEnum color)
     {
         base.ChangeColor(color);
-        // CurrentColorEnum = LevelManager.Ins.ActiveColor(objectRenderer); // Save the current color enum
-        // CurrentColor = objectRenderer.material.color; // Save the current color
     }
 
     protected override void Move()
     {
         base.Move();
-
+        if (isWinning == true) return;
         if (joyStick.Vertical != 0)
         {
             RaycastCheck();
@@ -61,11 +56,11 @@ public class Player : Character
         if (joyStick.Horizontal != 0 || joyStick.Vertical != 0)
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z));
-            anim.SetBool("IsRunning", true);
+            ChangeAnim("IsRunning",true);
         }
         else
         {
-            anim.SetBool("IsRunning", false);
+            ChangeAnim("IsRunning",false);
         }
     }
 
@@ -98,17 +93,17 @@ public class Player : Character
                 {
                     moveSpeed = originalMoveSpeed;
                 }
-                
+
                 if (stackBricks.Count != 0)
                 {
                     if (stair.stairEnum == ColorByEnum.None || stair.stairEnum != this.CurrentColorEnum)
-                    { 
+                    {
                         stair.ChangeColor(CurrentColorEnum);
                         // stair.meshRenderer.material.color = objectRenderer.material.color;
-                        RemoveBrick();  
+                        RemoveBrick();
                     }
                 }
-                
+
             }
 
             Vector3 hitNormal = hit.normal;
@@ -145,30 +140,22 @@ public class Player : Character
         {
             Debug.Log(other.gameObject.name);
             this.ClearAllBrick();
-            playerPlatform = LevelManager.Ins.GetNextPlatform(ref currentPlatformIndex);
-            this.transform.position += new Vector3(0,0,1f);
+            playerPlatform = door.platformDoor;
+            this.transform.position += new Vector3(0, 0, 1f);
             playerPlatform.SpawnBrick2(this, 5);
+        }
+
+        WinPlatform winPlatform = Cache.GetWinPlatform(other);
+        if (winPlatform != null)
+        {
+            anim.SetTrigger("IsWinning");
+            isWinning = true;
+            Debug.Log(this .gameObject.name + "win");
         }
     }
 
-//     private void OnCollisionExit(Collision other)
-//     {
-//         // Debug.Log(other.gameObject.name);
-        
-//         if (other.collider.CompareTag("Door") && joyStick.Vertical > 0)
-//         {
-//                     Door door = other.collider.GetComponent<Door>();
-//             Debug.Log(other.gameObject.name);
-//             playerPlatform = LevelManager.Ins.GetNextPlatform();
-//             this.ClearAllBrick();
-//             door.Compare(playerPlatform);
-//             this.transform.position += new Vector3(0,0,0.5f);
-//         }
-//     }
-
-
     protected void OnDrawGizmos()
-    {
+    {   
         Gizmos.DrawRay(rayPos.position, Vector3.down * raycastDistance);
         Gizmos.color = Color.red;
     }
