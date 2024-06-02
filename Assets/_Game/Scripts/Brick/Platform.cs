@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ public class Platform : MonoBehaviour
     [SerializeField] private Transform startPos;
     [SerializeField] private Brick brickPrefab;
     [SerializeField] public List<Brick> brickList = new List<Brick>();
-
+    private List<Vector3> occupiedPositions = new List<Vector3>();
 
     private void Start()
     {
@@ -35,7 +34,7 @@ public class Platform : MonoBehaviour
                 // Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick);
                 // Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick, transform.position, Quaternion.identity);
                 brick.ChangeColor(colors[index]);
-                brick.transform.position = startPos.position + new Vector3(x * 1.1f, 0, -y * 1.1f); // Adjust spacing as needed
+                brick.transform.position = startPos.position + new Vector3(x * 1.1f, 0, -y * 1.1f);
                 // brick.BrickColor();  
                 brickList.Add(brick);
                 brick.transform.SetParent(transform);
@@ -49,18 +48,23 @@ public class Platform : MonoBehaviour
         return brickList.FindAll(brick => brick.BrickColorEnum == colorEnum);
     }
 
-    public void SpawnBrick2(Character character,ColorByEnum CurrentColorEnum)
+    public void SpawnBrick2(Character character, int brickCount)
     {
-        foreach (Brick brick in brickList)
+        int spawnedCount = 0;
+        while (spawnedCount < brickCount)
         {
-            if (brick.BrickColorEnum == character.CurrentColorEnum)
+            int x = Random.Range(0, 10);
+            int y = Random.Range(0, 10);
+            Vector3 position = startPos.position + new Vector3(x * 1.1f, 0, -y * 1.1f);
+
+            if (!occupiedPositions.Contains(position))
             {
-                brick.gameObject.SetActive(true);
-                // brick.SetColor(playerColor,playercolor);
-            }
-            else
-            {
-                brick.gameObject.SetActive(false);
+                Brick brick = Instantiate(brickPrefab);
+                brick.ChangeColor(character.CurrentColorEnum);
+                brick.transform.position = position;
+                brickList.Add(brick);
+                occupiedPositions.Add(position);
+                spawnedCount++;
             }
         }
     }

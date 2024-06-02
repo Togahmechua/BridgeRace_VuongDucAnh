@@ -13,59 +13,32 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private BotCtrl botPrefab; // Prefab for the objects to be spawned
     [SerializeField] private Transform[] spawnPoints; // Spawn points for the objects
     [SerializeField] private Player player;
-    private int currentPlayerPlatformIndex = 0;
+
+    public int currentPlatformIndex = 0; // Make currentPlatformIndex global
 
     private void Awake()
     {
         LevelManager.ins = this;
         
         Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
-        ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Count()+1);
+        ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Length + 1);
        
-        foreach (ColorByEnum color in randomColors)
-        {
-            Debug.Log(color);
-        }
-
         Currentplatform[0].SpawnBrick(randomColors);
 
         player.ChangeColor(randomColors[0]);
         
         for (int i = 0; i < shuffledSpawnPoints.Length; i++)
         {
-            BotCtrl newObject = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
-            // BotCtrl newObject = SimplePool.Spawn<BotCtrl>(PoolType.Bot,shuffledSpawnPoints[i].position, Quaternion.identity);
-            newObject.ChangeColor(randomColors[i + 1]); // Start from the second color
+            BotCtrl newBot = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
+            newBot.ChangeColor(randomColors[i + 1]); // Start from the second color
         }
     }
-
-    private void Start()
-    {
-        // Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
-        // ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Count()+1);
-       
-        // foreach (ColorByEnum color in randomColors)
-        // {
-        //     Debug.Log(color);
-        // }
-
-        // player.ChangeColor(randomColors[0]);
-        
-        // for (int i = 0; i < shuffledSpawnPoints.Length - 1; i++)
-        // {
-        //     BotCtrl newObject = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
-        //     newObject.ChangeColor(randomColors[i + 1]); // Start from the second color
-        // }
-        // ChangeBrickColor();
-    }
-
 
     public ColorByEnum[] RandomEnumValues(int count)
     {
         Array enumValues = Enum.GetValues(typeof(ColorByEnum));
         List<ColorByEnum> enumList = new List<ColorByEnum>();
 
-        
         foreach (ColorByEnum value in enumValues)
         {
             if (value != ColorByEnum.None)
@@ -74,7 +47,6 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        
         if (count > enumList.Count)
         {
             Debug.LogError("Not enough enum values to select.");
@@ -103,15 +75,14 @@ public class LevelManager : MonoBehaviour
         return transforms;
     }
 
-    public Platform GetNextPlatform()
+    public Platform GetNextPlatform(ref int currentIndex)
     {
-        currentPlayerPlatformIndex++;
-        if (currentPlayerPlatformIndex >= Currentplatform.Length)
+        currentIndex++;
+        if (currentIndex >= Currentplatform.Length)
         {
-            currentPlayerPlatformIndex = 0; // Wrap around if at the end of the array
+            currentIndex = 0; // Wrap around if at the end of the array
         }
 
-        return Currentplatform[currentPlayerPlatformIndex];
+        return Currentplatform[currentIndex];
     }
-
 }

@@ -24,7 +24,7 @@ public class Brick : GameUnit
 
     private IEnumerator Wait2Sec()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(2f);
         meshRenderer.enabled = true;
         boxCollider.enabled = true;
     }
@@ -33,4 +33,14 @@ public class Brick : GameUnit
     {
         return BrickColorEnum == color;
     }
+
+    public bool isActiveBrick()
+    {
+        if(meshRenderer.enabled == true && boxCollider.enabled == true)
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

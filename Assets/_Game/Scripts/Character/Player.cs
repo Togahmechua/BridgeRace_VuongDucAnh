@@ -14,7 +14,7 @@ public class Player : Character
     [SerializeField] private float raycastDistance;
     [SerializeField] private Platform playerPlatform;
     private float originalMoveSpeed;
-    
+    private int currentPlatformIndex = 0;
 
 
     
@@ -22,7 +22,7 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
-        playerPlatform = LevelManager.Ins.Currentplatform[0];
+        playerPlatform = LevelManager.Ins.Currentplatform[currentPlatformIndex];
         // this.ChangeColors();
         originalMoveSpeed = moveSpeed;
     }
@@ -119,34 +119,16 @@ public class Player : Character
     protected override void AddBrick(Color CurrentColor)
     {
         base.AddBrick(CurrentColor);
-        // Brick newBrick = Instantiate(brickPrefab, Brickholder.position, Brickholder.rotation);
-        // newBrick.transform.SetParent(transform);
-        // Brickholder.transform.localPosition += new Vector3(0, 0.2f, 0);
-
-        // stackBricks.Push(newBrick.gameObject);
-        // newBrick.enabled = false;
-        // newBrick.meshRenderer.material.color = CurrentColor;
     }
 
     protected override void RemoveBrick()
     {
         base.RemoveBrick();
-        // if (stackBricks.Count <= 0) return;
-
-        // Destroy(stackBricks.Pop());
-        // Brickholder.transform.localPosition -= new Vector3(0, 0.2f, 0);
     }
 
     protected override void ClearAllBrick()
     {
         base.ClearAllBrick();
-        // if (stackBricks.Count == 0) return;
-
-        // while (stackBricks.Count > 0)
-        // {
-        //     Destroy(stackBricks.Pop());
-        //     Brickholder.localPosition = startHolderPos;
-        // }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -163,8 +145,9 @@ public class Player : Character
         {
             Debug.Log(other.gameObject.name);
             this.ClearAllBrick();
-            playerPlatform = LevelManager.Ins.GetNextPlatform();
+            playerPlatform = LevelManager.Ins.GetNextPlatform(ref currentPlatformIndex);
             this.transform.position += new Vector3(0,0,1f);
+            playerPlatform.SpawnBrick2(this, 5);
         }
     }
 
