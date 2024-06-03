@@ -16,30 +16,38 @@ public class Platform : MonoBehaviour
     // Clear and Spawn Bricks
     public void SpawnBrick(ColorByEnum[] colors)
     {
-        foreach (Brick brick in brickList)
-        {
-            Destroy(brick.gameObject);
+        if (brickList.Count > 0) {
+            foreach (Brick brick in brickList)
+            {
+                SimplePool.Despawn(brick);
+            }
+            brickList.Clear();
         }
-        brickList.Clear();
 
+        List<Vector3> positions = new List<Vector3>();
         int index = 0;
-    
+
         for (int x = 0; x < 10; x++) 
         {
             x++;
             for (int y = 0; y < 10; y++)
             {
                 y++;
-                Brick brick = Instantiate(brickPrefab);
-                // Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick);
-                // Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick, transform.position, Quaternion.identity);
-                brick.ChangeColor(colors[index]);
-                brick.transform.position = startPos.position + new Vector3(x * 1.1f, 0, -y * 1.1f);
-                // brick.BrickColor();  
-                brickList.Add(brick);
-                brick.transform.SetParent(transform);
-                index = (index + 1) % colors.Length;
+                positions.Add(startPos.position + new Vector3(x * 1.1f, 0, -y * 1.1f));
             }
+        }
+
+        // Shuffle the positions
+        Shuffle(positions);
+
+        foreach (Vector3 position in positions)
+        {
+            Brick brick = SimplePool.Spawn<Brick>(brickPrefab, transform.position, Quaternion.identity);
+            brick.ChangeColor(colors[index]);
+            brick.transform.position = position;
+            brickList.Add(brick);
+            brick.transform.SetParent(transform);
+            index = (index + 1) % colors.Length;
         }
     }
 
@@ -59,13 +67,25 @@ public class Platform : MonoBehaviour
 
             if (!occupiedPositions.Contains(position))
             {
-                Brick brick = Instantiate(brickPrefab);
+                Brick brick = SimplePool.Spawn<Brick>(brickPrefab, transform.position, Quaternion.identity);
                 brick.ChangeColor(character.CurrentColorEnum);
                 brick.transform.position = position;
                 brickList.Add(brick);
                 occupiedPositions.Add(position);
                 spawnedCount++;
             }
+        }
+    }
+
+    // Fisher-Yates Shuffle
+    private void Shuffle(List<Vector3> positions)
+    {
+        for (int i = positions.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            Vector3 temp = positions[i];
+            positions[i] = positions[j];
+            positions[j] = temp;
         }
     }
 }

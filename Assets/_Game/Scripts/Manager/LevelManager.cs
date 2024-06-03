@@ -29,7 +29,8 @@ public class LevelManager : MonoBehaviour
         
         for (int i = 0; i < shuffledSpawnPoints.Length; i++)
         {
-            BotCtrl newBot = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
+            BotCtrl newBot = SimplePool.Spawn<BotCtrl>(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
+            // BotCtrl newBot = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
             newBot.ChangeColor(randomColors[i + 1]); // Start from the second color
         }
     }
@@ -74,15 +75,4 @@ public class LevelManager : MonoBehaviour
         }
         return transforms;
     }
-
-    // public Platform GetNextPlatform(ref int currentIndex)
-    // {
-    //     currentIndex++;
-    //     if (currentIndex >= Currentplatform.Length)
-    //     {
-    //         currentIndex = 0; // Wrap around if at the end of the array
-    //     }
-
-    //     return Currentplatform[currentIndex];
-    // }
 }

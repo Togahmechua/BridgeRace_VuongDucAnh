@@ -17,7 +17,7 @@ public class Player : Character
     private int currentPlatformIndex = 0;
     [SerializeField] private bool isWinning = false;
 
-
+    public Transform rank1;
 
 
 
@@ -151,6 +151,7 @@ public class Player : Character
             anim.SetTrigger("IsWinning");
             isWinning = true;
             Debug.Log(this .gameObject.name + "win");
+            transform.position = rank1.position;
         }
     }
 

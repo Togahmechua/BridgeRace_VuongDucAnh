@@ -27,6 +27,11 @@ public class Character : GameUnit
         objectRenderer.material = colorData.GetMaterial(color);
     }
 
+    protected virtual void OnInit()
+    {
+        //For override
+    }
+
     protected virtual void Move()
     {
         //For override
