@@ -17,14 +17,11 @@ public class Player : Character
     private int currentPlatformIndex = 0;
     [SerializeField] private bool isWinning = false;
 
-    public Transform rank1;
-
-
 
     protected override void Start()
     {
         base.Start();
-        playerPlatform = LevelManager.Ins.Currentplatform[currentPlatformIndex];
+        playerPlatform = LevelManager.Ins.level.platformList[currentPlatformIndex];
         // this.ChangeColors();
         originalMoveSpeed = moveSpeed;
     }
@@ -139,10 +136,10 @@ public class Player : Character
         if (door != null && joyStick.Vertical > 0)
         {
             Debug.Log(other.gameObject.name);
-            this.ClearAllBrick();
+            // this.ClearAllBrick();
             playerPlatform = door.platformDoor;
             this.transform.position += new Vector3(0, 0, 1f);
-            playerPlatform.SpawnBrick2(this, 5);
+            playerPlatform.SpawnBrick2(this, 8);
         }
 
         WinPlatform winPlatform = Cache.GetWinPlatform(other);
@@ -151,7 +148,8 @@ public class Player : Character
             anim.SetTrigger("IsWinning");
             isWinning = true;
             Debug.Log(this .gameObject.name + "win");
-            transform.position = rank1.position;
+            this.ClearAllBrick();
+            LevelManager.Ins.MovePlayerAndBotToWinPos();
         }
     }
 

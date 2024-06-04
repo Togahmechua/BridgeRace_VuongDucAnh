@@ -20,6 +20,7 @@ public class Rank : MonoBehaviour
         if(character != null)
         {
             this.ChangeColor(character.CurrentColorEnum);
+            Debug.Log("ChangeColor");
         }
     }
 }

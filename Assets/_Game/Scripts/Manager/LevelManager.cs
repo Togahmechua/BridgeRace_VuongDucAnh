@@ -9,29 +9,59 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Ins => ins;
     public ColorData colorData;
     public ColorByEnum colorByEnum;
-    [SerializeField] public Platform[] Currentplatform;
+    public Level level;
+
     [SerializeField] private BotCtrl botPrefab; // Prefab for the objects to be spawned
     [SerializeField] private Transform[] spawnPoints; // Spawn points for the objects
     [SerializeField] private Player player;
+    
+    [SerializeField] private Transform col1;
+    [SerializeField] private Transform col2;
+    [SerializeField] private Transform col3;
 
-    // public int currentPlatformIndex = 0; // Make currentPlatformIndex global
+    private List<BotCtrl> spawnedBots = new List<BotCtrl>(); // List to store spawned bots
 
     private void Awake()
     {
         LevelManager.ins = this;
-        
+
+        level = FindObjectOfType<Level>();
+        FindWinPlatformAndCols();
+
         Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
         ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Length + 1);
        
-        Currentplatform[0].SpawnBrick(randomColors);
+        // Currentplatform[0].SpawnBrick(randomColors);
+        level.platformList[0].SpawnBrick(randomColors);
 
         player.ChangeColor(randomColors[0]);
         
         for (int i = 0; i < shuffledSpawnPoints.Length; i++)
         {
             BotCtrl newBot = SimplePool.Spawn<BotCtrl>(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
-            // BotCtrl newBot = Instantiate(botPrefab, shuffledSpawnPoints[i].position, Quaternion.identity);
             newBot.ChangeColor(randomColors[i + 1]); // Start from the second color
+            spawnedBots.Add(newBot);
+        }
+    }
+
+    private void FindWinPlatformAndCols()
+    {
+        GameObject winPlatform = GameObject.FindGameObjectWithTag("Win");
+
+        if (winPlatform != null)
+        {
+            col1 = winPlatform.transform.Find("Col1");
+            col2 = winPlatform.transform.Find("Col2");
+            col3 = winPlatform.transform.Find("Col3");
+
+            if (col1 == null || col2 == null || col3 == null)
+            {
+                Debug.LogError("Columns Col1, Col2, and/or Col3 not found in WinPlatform.");
+            }
+        }
+        else
+        {
+            Debug.LogError("WinPlatform not found in the scene.");
         }
     }
 
@@ -74,5 +104,29 @@ public class LevelManager : MonoBehaviour
             transforms[randomIndex] = temp;
         }
         return transforms;
+    }
+
+    public void MovePlayerAndBotToWinPos()
+    {
+        if (col1 == null || col2 == null || col3 == null)
+        {
+            Debug.LogError("Columns Col1, Col2, and/or Col3 not assigned.");
+            return;
+        }
+
+        player.transform.position = col1.position;
+        player.transform.rotation = Quaternion.Euler(new Vector3(0f,180f,0f));
+
+        // Create an array with Col2 and Col3 and shuffle it
+        Transform[] cols = new Transform[] { col2, col3 };
+        cols = ShuffleTransforms(cols);
+
+        // Assign the positions to the bots
+        for (int i = 0; i < spawnedBots.Count && i < cols.Length; i++)
+        {
+            spawnedBots[i].transform.position = cols[i].position;
+            spawnedBots[i].transform.rotation = Quaternion.Euler(new Vector3(0f,180f,0f));
+            spawnedBots[i].TransToWinState();
+        }
     }
 }

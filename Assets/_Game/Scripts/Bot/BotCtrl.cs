@@ -16,10 +16,12 @@ public class BotCtrl : Character
     public IdleState idleState;
     public FindBrickState findBrickState;
     public BuildBridgeState buildBridgeState;
+    public WinState winState;
+
     [SerializeField] private Transform rayPos;
     [SerializeField] private Platform BotPlatform;
     [SerializeField] private float raycastDistance;
-    [SerializeField] private bool isWinning;
+    public bool isWinning;
     public bool IsHavingNearestBrick;
     public int BricksToFind;
 
@@ -29,13 +31,13 @@ public class BotCtrl : Character
     {
         base.Start();
 
-        if (LevelManager.Ins.Currentplatform == null || LevelManager.Ins.Currentplatform.Length == 0)
+        if (LevelManager.Ins.level.platformList == null || LevelManager.Ins.level.platformList.Length == 0)
         {
             Debug.LogError("Platform list is not assigned or is empty.");
             return;
         }
 
-        BotPlatform = LevelManager.Ins.Currentplatform[currentPlatformIndex];
+        BotPlatform = LevelManager.Ins.level.platformList[currentPlatformIndex];
         rayPos = transform.Find("rayPos");
         player = FindObjectOfType<Player>();
 
@@ -54,9 +56,9 @@ public class BotCtrl : Character
         idleState = new IdleState();
         findBrickState = new FindBrickState();
         buildBridgeState = new BuildBridgeState();
+        winState = new WinState();
         // Start in Idle state
         TransitionToState(idleState);
-
         BricksToFind = RandomBrickCount();
     }
 
@@ -71,6 +73,13 @@ public class BotCtrl : Character
         currentState?.OnExit(this);
         currentState = newState;
         currentState?.OnEnter(this);
+    }
+
+    public void TransToWinState()
+    {
+        ClearAllBrick();
+        TransitionToState(winState);
+        agent.enabled = false;  
     }
 
     public Brick FindNearestBrick()
@@ -126,7 +135,7 @@ public class BotCtrl : Character
 
     protected void MoveToBrickWithSameColor(Transform pos)
     {
-        if (isWinning) return;
+        if (isWinning == true) return;
         agent.SetDestination(pos.position);
         ChangeAnim("IsRunning", true);
     }
@@ -159,7 +168,7 @@ public class BotCtrl : Character
 
     public int RandomBrickCount()
     {
-        return Random.Range(5, 10);
+        return Random.Range(5, 15);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -180,10 +189,10 @@ public class BotCtrl : Character
         if (door != null && agent.velocity.z > 0)
         {
             Debug.Log(other.gameObject.name);
-            this.ClearAllBrick();
+            // this.ClearAllBrick();
             BotPlatform = door.platformDoor;
             this.transform.position += new Vector3(0, 0, 1f);
-            BotPlatform.SpawnBrick2(this, 5);
+            BotPlatform.SpawnBrick2(this, 8);
             bricksByColor = BotPlatform.GetBricksByColor(botColorEnum);
             TransitionToState(findBrickState);
         }
@@ -194,6 +203,7 @@ public class BotCtrl : Character
             anim.SetTrigger("IsWinning");
             isWinning = true;
             Debug.Log(this.gameObject.name + " win");
+            this.ClearAllBrick();
         }
     }
 

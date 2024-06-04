@@ -8,6 +8,8 @@ TagManager:
   - Stair
   - Ground
   - Door
+  - Win
+  - Map
   layers:
   - Default
   - TransparentFX

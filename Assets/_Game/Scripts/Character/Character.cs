@@ -42,6 +42,11 @@ public class Character : GameUnit
         anim.SetBool(nameAnim,isActive);
     }
 
+    public virtual void ChangeAnim(string nameAnim)
+    {
+        anim.SetTrigger(nameAnim);
+    }
+
     protected virtual void AddBrick(Color CurrentColor)
     {
         Brick newBrick = SimplePool.Spawn<Brick>(PoolType.Brick, Brickholder.position, Brickholder.rotation);
