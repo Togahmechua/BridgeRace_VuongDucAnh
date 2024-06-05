@@ -29,7 +29,7 @@ public class Player : Character
     public override void OnInit()
     {
         base.OnInit();
-        this.transform.position = LevelManager.Ins.level.playerPos.position;
+        this.transform.position = LevelManager.Ins.playerPos.position;
         isWinning = false;
         anim.SetTrigger("Idle");
     }
@@ -158,6 +158,8 @@ public class Player : Character
             Debug.Log(this .gameObject.name + "win");
             this.ClearAllBrick();
             LevelManager.Ins.MovePlayerAndBotToWinPos();
+            LevelManager.Ins.CurLevel++;
+            PlayerPrefs.SetInt("CurrentLevel" , LevelManager.Ins.CurLevel);
         }
     }
 

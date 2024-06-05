@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class BotCtrl : Character
 {
     public NavMeshAgent agent;
-    public Transform finishPos;
+
     public ColorByEnum botColorEnum;
 
     private List<Brick> bricksByColor;
@@ -17,7 +17,7 @@ public class BotCtrl : Character
     public FindBrickState findBrickState;
     public BuildBridgeState buildBridgeState;
     public WinState winState;
-
+    public Rigidbody rb;
     [SerializeField] private Transform rayPos;
     [SerializeField] private Platform BotPlatform;
     [SerializeField] private float raycastDistance;
@@ -30,7 +30,7 @@ public class BotCtrl : Character
     protected override void Start()
     {
         base.Start();
-
+        OnInit();
         if (LevelManager.Ins.level.platformList == null || LevelManager.Ins.level.platformList.Length == 0)
         {
             Debug.LogError("Platform list is not assigned or is empty.");
@@ -41,15 +41,6 @@ public class BotCtrl : Character
         rayPos = transform.Find("rayPos");
         player = FindObjectOfType<Player>();
 
-        GameObject finishPosObj = GameObject.Find("FinishPos");
-        if (finishPosObj != null)
-        {
-            finishPos = finishPosObj.transform;
-        }
-        else
-        {
-            Debug.LogError("Game object with the name 'FinishPos' not found.");
-        }
         botColorEnum = CurrentColorEnum;
 
         // Initialize states
@@ -68,6 +59,14 @@ public class BotCtrl : Character
         currentState?.OnExecute(this);
     }
 
+    public override void OnInit()
+    {
+        base.OnInit();
+        rb.useGravity = false;
+    }
+
+    
+
     public void TransitionToState(IState<BotCtrl> newState)
     {
         currentState?.OnExit(this);
@@ -79,7 +78,7 @@ public class BotCtrl : Character
     {
         ClearAllBrick();
         TransitionToState(winState);
-        agent.enabled = false;  
+        agent.enabled = false;
     }
 
     public Brick FindNearestBrick()
@@ -90,7 +89,7 @@ public class BotCtrl : Character
 
         foreach (Brick brick in bricks)
         {
-            if (brick.isActiveBrick() == true)
+            if (brick != null && brick.isActiveBrick())
             {
                 float distance = Vector3.Distance(transform.position, brick.transform.position);
                 if (distance < minDistance)
@@ -120,17 +119,31 @@ public class BotCtrl : Character
 
     public void CheckArrival()
     {
-        if (targetBrick != null && Vector3.Distance(transform.position, targetBrick.transform.position) < 0.5f)
+       if (targetBrick != null && Vector3.Distance(transform.position, targetBrick.transform.position) < 0.5f)
         {
             targetBrick = null;
             TransitionToState(findBrickState);
         }
+        else if (targetBrick == null)
+        {
+            TransitionToState(findBrickState);
+        } 
     }
 
     public void GoToFinishPoint()
     {
-        agent.SetDestination(finishPos.position);
-        ChangeAnim("IsRunning", true);
+        if (LevelManager.Ins.level.finishPos != null)
+        {
+            Vector3 finishPosition = LevelManager.Ins.level.finishPos.position;
+            // Logic to move bot to finishPoint
+            agent.SetDestination(LevelManager.Ins.level.finishPos.position);
+            ChangeAnim("IsRunning", true); 
+        }
+        else
+        {
+            Debug.Log("FinishPoint is null");
+        }
+        
     }
 
     protected void MoveToBrickWithSameColor(Transform pos)

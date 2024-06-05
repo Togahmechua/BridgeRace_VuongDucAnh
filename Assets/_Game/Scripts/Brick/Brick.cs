@@ -8,8 +8,7 @@ public class Brick : GameUnit
     [SerializeField] ColorData colorData;
     public ColorByEnum BrickColorEnum { get; private set; }
 
-
-    public virtual void ChangeColor(ColorByEnum  color)
+    public virtual void ChangeColor(ColorByEnum color)
     {
         BrickColorEnum = color;
         meshRenderer.material = colorData.GetMaterial(color);
@@ -36,11 +35,6 @@ public class Brick : GameUnit
 
     public bool isActiveBrick()
     {
-        if(meshRenderer.enabled == true && boxCollider.enabled == true)
-        {
-            return true;
-        }
-        return false;
+        return meshRenderer != null && boxCollider != null && meshRenderer.enabled && boxCollider.enabled;
     }
-
 }

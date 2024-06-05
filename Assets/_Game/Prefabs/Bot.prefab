@@ -109,9 +109,13 @@ MonoBehaviour:
   agent: {fileID: 3809503096727840237}
   finishPos: {fileID: 2683709971993923836}
   botColorEnum: 0
+  rb: {fileID: 6145693078787740129}
   rayPos: {fileID: 0}
-  currentPlatform: {fileID: 0}
+  BotPlatform: {fileID: 0}
   raycastDistance: 5
+  isWinning: 0
+  IsHavingNearestBrick: 0
+  BricksToFind: 0
 --- !u!195 &3809503096727840237
 NavMeshAgent:
   m_ObjectHideFlags: 0

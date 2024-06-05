@@ -378,59 +378,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &3686655795371425517
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4647992513797854478}
-  - component: {fileID: 5854767465383418862}
-  m_Layer: 0
-  m_Name: Obj
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4647992513797854478
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3686655795371425517}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.68, z: 22.66}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4177011258358715928}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5854767465383418862
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3686655795371425517}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 15.139433, y: 1.645956, z: 0.02987051}
-  m_Center: {x: -0.035287857, y: 0.32297802, z: 0.11320996}
 --- !u!1 &5630913216228958217
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +408,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4647992513797854478}
   - {fileID: 3756947872479059646}
   - {fileID: 6451017444938434935}
   - {fileID: 4040045135923689342}
@@ -487,6 +433,10 @@ MonoBehaviour:
   platformList:
   - {fileID: 6211856355281924709}
   - {fileID: 4292265185037886892}
+  col1: {fileID: 8928976332580227894}
+  col2: {fileID: 7544786291451745236}
+  col3: {fileID: 6358880870725669451}
+  finishPos: {fileID: 6543805137011369930}
 --- !u!1 &7009362005584295946
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,6 +585,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4177011258358715928}
     m_Modifications:
+    - target: {fileID: 2811411742806960552, guid: af978e74dfc134641ba7786baafaf43a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.504
+      objectReference: {fileID: 0}
     - target: {fileID: 4468211480115885521, guid: af978e74dfc134641ba7786baafaf43a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -841,6 +795,26 @@ PrefabInstance:
 --- !u!4 &4040045135923689342 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3648097858055664413, guid: ef828b001e03d324682ff0cb330ffa8c, type: 3}
+  m_PrefabInstance: {fileID: 770601559141893219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6358880870725669451 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5948958785222645288, guid: ef828b001e03d324682ff0cb330ffa8c, type: 3}
+  m_PrefabInstance: {fileID: 770601559141893219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6543805137011369930 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5792189944658371497, guid: ef828b001e03d324682ff0cb330ffa8c, type: 3}
+  m_PrefabInstance: {fileID: 770601559141893219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7544786291451745236 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7063277134301894583, guid: ef828b001e03d324682ff0cb330ffa8c, type: 3}
+  m_PrefabInstance: {fileID: 770601559141893219}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8928976332580227894 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8168301173004259157, guid: ef828b001e03d324682ff0cb330ffa8c, type: 3}
   m_PrefabInstance: {fileID: 770601559141893219}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3870301058598986711
