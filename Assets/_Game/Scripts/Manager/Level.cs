@@ -4,6 +4,6 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     public Platform[] platformList;
-
-    // Optionally, you can add more level-specific logic here.
+    public Transform playerPos;
+    public Transform[] botPos;
 }

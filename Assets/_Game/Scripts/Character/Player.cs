@@ -26,6 +26,14 @@ public class Player : Character
         originalMoveSpeed = moveSpeed;
     }
 
+    public override void OnInit()
+    {
+        base.OnInit();
+        this.transform.position = LevelManager.Ins.level.playerPos.position;
+        isWinning = false;
+        anim.SetTrigger("Idle");
+    }
+
     private void FixedUpdate()
     {
         this.Move();
@@ -139,7 +147,7 @@ public class Player : Character
             // this.ClearAllBrick();
             playerPlatform = door.platformDoor;
             this.transform.position += new Vector3(0, 0, 1f);
-            playerPlatform.SpawnBrick2(this, 8);
+            // playerPlatform.SpawnBrick(this, 8);
         }
 
         WinPlatform winPlatform = Cache.GetWinPlatform(other);
@@ -153,9 +161,9 @@ public class Player : Character
         }
     }
 
-    protected void OnDrawGizmos()
-    {   
-        Gizmos.DrawRay(rayPos.position, Vector3.down * raycastDistance);
-        Gizmos.color = Color.red;
-    }
+    // protected void OnDrawGizmos()
+    // {   
+    //     Gizmos.DrawRay(rayPos.position, Vector3.down * raycastDistance);
+    //     Gizmos.color = Color.red;
+    // }
 }

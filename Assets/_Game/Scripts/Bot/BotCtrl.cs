@@ -157,7 +157,6 @@ public class BotCtrl : Character
 
                         if (stackBricks.Count == 0)
                         {
-                            // MoveToNextBrick();
                             TransitionToState(findBrickState);
                         }
                     }
@@ -189,10 +188,9 @@ public class BotCtrl : Character
         if (door != null && agent.velocity.z > 0)
         {
             Debug.Log(other.gameObject.name);
-            // this.ClearAllBrick();
             BotPlatform = door.platformDoor;
             this.transform.position += new Vector3(0, 0, 1f);
-            BotPlatform.SpawnBrick2(this, 8);
+            // BotPlatform.SpawnBrick(this.CurrentColorEnum);
             bricksByColor = BotPlatform.GetBricksByColor(botColorEnum);
             TransitionToState(findBrickState);
         }
@@ -205,12 +203,6 @@ public class BotCtrl : Character
             Debug.Log(this.gameObject.name + " win");
             this.ClearAllBrick();
         }
-    }
-
-    protected void OnDrawGizmos()
-    {
-        Gizmos.DrawRay(rayPos.position, Vector3.down * raycastDistance);
-        Gizmos.color = Color.red;
     }
 
     internal bool IsEnoughBrickToBuild() => stackBricks.Count >= BricksToFind;
