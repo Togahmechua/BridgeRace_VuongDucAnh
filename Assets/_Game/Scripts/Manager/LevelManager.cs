@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         LevelManager.ins = this;
+        Time.timeScale = 0;
         CurLevel = PlayerPrefs.GetInt("CurrentLevel", 0); 
         LoadLevel();
         StartLevel();
