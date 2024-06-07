@@ -25,9 +25,15 @@ public class LevelManager : MonoBehaviour
     {
         LevelManager.ins = this;
         Time.timeScale = 0;
-        CurLevel = PlayerPrefs.GetInt("CurrentLevel", 0); 
-        LoadLevel();
-        StartLevel();
+        CurLevel = PlayerPrefs.GetInt("CurrentLevel", 0 ); 
+    }
+
+    private void Update()
+    {
+        if (CurLevel > levelList.Count)
+        {
+            CurLevel = levelList.Count;
+        }
     }
 
     public ColorByEnum[] RandomEnumValues(int count)
@@ -94,8 +100,9 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void StartLevel()
+    public void StartLevel()
     {
+        LoadLevel();
         Transform[] shuffledSpawnPoints = ShuffleTransforms(spawnPoints);
         ColorByEnum[] randomColors = RandomEnumValues(spawnPoints.Length + 1);
        
@@ -120,15 +127,15 @@ public class LevelManager : MonoBehaviour
         {
             Destroy(level.gameObject);
         }
+
+        for (int i = 0; i < spawnedBots.Count; i++)
+        {
+            SimplePool.Despawn(spawnedBots[i]);
+        }
         
         level = Instantiate(levelList[CurLevel], transform);
         level = FindObjectOfType<Level>();
         player.OnInit();
-
-        for (int i = 0; i < spawnedBots.Count; i++)
-        {
-            spawnedBots[i].OnInit();
-        }
     }
 
     public void NextLevel()
@@ -152,12 +159,17 @@ public class LevelManager : MonoBehaviour
 
     public void NewGame()
     {
-        CurLevel = 1;
+        CurLevel = 0;
+        PlayerPrefs.SetInt("CurrentLevel", CurLevel);
+        PlayerPrefs.Save();
+        StartLevel();
     }
 
     public void ResetMap()
     {
         CurLevel--;
+        if (CurLevel < 0) CurLevel = 0;
+        StartLevel();
     }
 
     public void Quit()

@@ -8,7 +8,7 @@ public class FindBrickState : IState<BotCtrl>
     {
         bot.ChangeAnim("IsRunning", true);
         bot.MoveToNextBrick();
-        Debug.Log("Enter FindBrickState");
+        // Debug.Log("Enter FindBrickState");
     }
 
     public void OnExecute(BotCtrl bot)
@@ -16,7 +16,7 @@ public class FindBrickState : IState<BotCtrl>
         if (bot.IsEnoughBrickToBuild())
         {
             bot.TransitionToState(bot.buildBridgeState);
-            Debug.Log("Transition to BuildBridgeState");
+            // Debug.Log("Transition to BuildBridgeState");
         }
         else
         {

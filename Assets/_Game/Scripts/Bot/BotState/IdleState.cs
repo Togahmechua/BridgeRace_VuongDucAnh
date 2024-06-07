@@ -8,7 +8,7 @@ public class IdleState : IState<BotCtrl>
     {
         bot.ChangeAnim("Idle", true);
         bot.TransitionToState(bot.findBrickState);
-        Debug.Log("Idle");
+        // Debug.Log("Idle");
     }
 
     public void OnExecute(BotCtrl bot)

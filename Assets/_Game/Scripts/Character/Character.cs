@@ -21,7 +21,7 @@ public class Character : GameUnit
         startHolderPos = Brickholder.localPosition;
     }
 
-    public virtual void ChangeColor(ColorByEnum  color)
+    public virtual void ChangeColor(ColorByEnum color)
     {
         CurrentColorEnum = color;
         objectRenderer.material = colorData.GetMaterial(color);
@@ -39,7 +39,7 @@ public class Character : GameUnit
 
     public virtual void ChangeAnim(string nameAnim, bool isActive)
     {
-        anim.SetBool(nameAnim,isActive);
+        anim.SetBool(nameAnim, isActive);
     }
 
     public virtual void ChangeAnim(string nameAnim)
@@ -75,4 +75,22 @@ public class Character : GameUnit
             Brickholder.localPosition = startHolderPos;
         }
     }
+
+    protected void OpenUINextLevel()
+    {
+        Debug.Log("Current Level: " + LevelManager.Ins.CurLevel);
+        Debug.Log("Total Levels: " + LevelManager.Ins.levelList.Count);
+
+        if (LevelManager.Ins.CurLevel < LevelManager.Ins.levelList.Count) // Lưu ý điều kiện này
+        {
+            UIManager.Ins.OpenUI<NextLevel>();
+            Debug.Log("Next Level UI opened.");
+        }
+        else
+        {
+            UIManager.Ins.OpenUI<WinGameCanvas>();
+            Debug.Log("Win Game UI opened.");
+        }
+    }
+
 }

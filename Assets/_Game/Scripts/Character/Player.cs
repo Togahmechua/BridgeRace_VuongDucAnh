@@ -21,7 +21,7 @@ public class Player : Character
     protected override void Start()
     {
         base.Start();
-        playerPlatform = LevelManager.Ins.level.platformList[currentPlatformIndex];
+        // playerPlatform = LevelManager.Ins.level.platformList[currentPlatformIndex];
         // this.ChangeColors();
         originalMoveSpeed = moveSpeed;
     }
@@ -32,6 +32,8 @@ public class Player : Character
         this.transform.position = LevelManager.Ins.playerPos.position;
         isWinning = false;
         anim.SetTrigger("Idle");
+        transform.rotation = Quaternion.Euler(new Vector3(0f,0f,0f));
+        ClearAllBrick();
     }
 
     private void FixedUpdate()
@@ -131,6 +133,7 @@ public class Player : Character
         base.ClearAllBrick();
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
         Brick otherBrick = Cache.GetBrick(other);
@@ -147,7 +150,6 @@ public class Player : Character
             // this.ClearAllBrick();
             playerPlatform = door.platformDoor;
             this.transform.position += new Vector3(0, 0, 1f);
-            // playerPlatform.SpawnBrick(this, 8);
         }
 
         WinPlatform winPlatform = Cache.GetWinPlatform(other);
@@ -160,6 +162,7 @@ public class Player : Character
             LevelManager.Ins.MovePlayerAndBotToWinPos();
             LevelManager.Ins.CurLevel++;
             PlayerPrefs.SetInt("CurrentLevel" , LevelManager.Ins.CurLevel);
+            Invoke(nameof(OpenUINextLevel),3f);
         }
     }
 

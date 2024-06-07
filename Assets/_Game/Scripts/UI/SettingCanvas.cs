@@ -17,5 +17,6 @@ public class SettingCanvas : UICanvas
     public void RestartButton()
     {
         Time.timeScale = 1;
+        LevelManager.Ins.StartLevel();
     }
 }

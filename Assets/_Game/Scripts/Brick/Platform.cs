@@ -73,6 +73,7 @@ public class Platform : MonoBehaviour
                 brickList.Add(brick);
                 occupiedPositions.Add(position);
                 spawnedCount++;
+                brick.transform.SetParent(transform);
             }
         }
     }

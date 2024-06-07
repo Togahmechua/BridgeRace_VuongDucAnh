@@ -215,6 +215,8 @@ public class BotCtrl : Character
             isWinning = true;
             Debug.Log(this.gameObject.name + " win");
             this.ClearAllBrick();
+            UIManager.Ins.OpenUI<FailCanvas>();
+            Time.timeScale = 0;
         }
     }
 

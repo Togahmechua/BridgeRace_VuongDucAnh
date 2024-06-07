@@ -8,7 +8,7 @@ public class BuildBridgeState : IState<BotCtrl>
     {
         bot.GoToFinishPoint();
         bot.BricksToFind = bot.RandomBrickCount();
-        Debug.Log("Enter BuildBridgeState");
+        // Debug.Log("Enter BuildBridgeState");
         if (bot.stackBricks.Count <= 0)
         {
             bot.TransitionToState(bot.findBrickState);
@@ -20,7 +20,7 @@ public class BuildBridgeState : IState<BotCtrl>
         if (bot.stackBricks.Count <= 0)
         {
             bot.TransitionToState(bot.findBrickState);
-            Debug.Log("Not enough bricks, transition to FindBrickState");
+            // Debug.Log("Not enough bricks, transition to FindBrickState");
         }
     }
 
