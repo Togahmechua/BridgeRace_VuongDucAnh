@@ -64,4 +64,16 @@ public class Cache
 
         return winPos[collider];
     }
+
+    private static Dictionary<Collider, DeadZone> deadZone = new Dictionary<Collider, DeadZone>();
+
+    public static DeadZone GetDeadZone(Collider collider)
+    {
+        if (!deadZone.ContainsKey(collider))
+        {
+            deadZone.Add(collider, collider.GetComponent<DeadZone>());
+        }
+
+        return deadZone[collider];
+    }
 }

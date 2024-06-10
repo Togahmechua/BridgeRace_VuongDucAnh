@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : Character
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private FixedJoystick joyStick;
+    [SerializeField] private DynamicJoystick joyStick;
     [SerializeField] private float moveSpeed;
     // [SerializeField] private Brick brickPrefab;
     // private Stack<GameObject> stackBricks = new Stack<GameObject>();
@@ -163,6 +163,13 @@ public class Player : Character
             LevelManager.Ins.CurLevel++;
             PlayerPrefs.SetInt("CurrentLevel" , LevelManager.Ins.CurLevel);
             Invoke(nameof(OpenUINextLevel),3f);
+        }
+
+        DeadZone deadZone = Cache.GetDeadZone(other);
+        if(deadZone != null)
+        {
+            UIManager.Ins.OpenUI<FailCanvas>();
+            Time.timeScale = 0;
         }
     }
 

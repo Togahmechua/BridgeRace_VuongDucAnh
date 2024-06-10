@@ -13,6 +13,14 @@ public class Door : MonoBehaviour
         if (character != null)
         {
             platformDoor.SpawnBrick2(character, 8);
+            StartCoroutine(DeActiveDoor());
         }
+    }
+
+    private IEnumerator DeActiveDoor()
+    {
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(true);
     }
 }
