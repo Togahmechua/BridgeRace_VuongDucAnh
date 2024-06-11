@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : Character
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private DynamicJoystick joyStick;
+    [SerializeField] private FixedJoystick joyStick;
     [SerializeField] private float moveSpeed;
     // [SerializeField] private Brick brickPrefab;
     // private Stack<GameObject> stackBricks = new Stack<GameObject>();
@@ -149,7 +149,7 @@ public class Player : Character
             Debug.Log(other.gameObject.name);
             // this.ClearAllBrick();
             playerPlatform = door.platformDoor;
-            this.transform.position += new Vector3(0, 0, 1f);
+            this.transform.position += new Vector3(0, 0, 3f);
         }
 
         WinPlatform winPlatform = Cache.GetWinPlatform(other);

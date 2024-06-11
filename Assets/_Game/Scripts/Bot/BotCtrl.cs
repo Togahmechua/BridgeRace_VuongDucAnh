@@ -202,7 +202,7 @@ public class BotCtrl : Character
         {
             Debug.Log(other.gameObject.name);
             BotPlatform = door.platformDoor;
-            this.transform.position += new Vector3(0, 0, 1f);
+            this.transform.position += new Vector3(0, 0, 2f);
             // BotPlatform.SpawnBrick(this.CurrentColorEnum);
             bricksByColor = BotPlatform.GetBricksByColor(botColorEnum);
             TransitionToState(findBrickState);
