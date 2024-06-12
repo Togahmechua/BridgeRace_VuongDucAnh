@@ -411,6 +411,7 @@ MonoBehaviour:
   colorByEnum: 0
   level: {fileID: 0}
   levelList:
+  - {fileID: 380062105193778244, guid: f2e54fb5556cd5c439f9a823f35954cf, type: 3}
   - {fileID: 6565513120490949273, guid: 3b33ad0a01637c74899d54caedce1578, type: 3}
   - {fileID: 5872457157296696666, guid: bfe173fa617dca44b927d13f1e4920e0, type: 3}
   CurLevel: 0
@@ -718,7 +719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &741323270
 MeshCollider:
   m_ObjectHideFlags: 0

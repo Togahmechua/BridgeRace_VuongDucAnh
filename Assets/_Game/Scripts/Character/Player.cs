@@ -14,7 +14,7 @@ public class Player : Character
     [SerializeField] private float raycastDistance;
     [SerializeField] private Platform playerPlatform;
     private float originalMoveSpeed;
-    private int currentPlatformIndex = 0;
+    // private int currentPlatformIndex = 0;
     [SerializeField] private bool isWinning = false;
 
 
